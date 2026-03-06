@@ -8,17 +8,32 @@ usage=$(cat << EOF
 Usage:
     $0 [-h] RUN_SCRIPT [--run|--no-run]
 
-Script to demonstrate scaling properties of openmp miniweather.
+Script to demonstrate scaling properties by compiling different versions 
+miniweather and then launching these different versions with different 
+OMP_NUM_THREADS.
 
 Required arguments:
-    RUN_SCRIPT       The name of the run script (e.g., compute_miniweather.run)
+    RUN_SCRIPT  The name of the run script (e.g., compute_miniweather.run)
 
 Optional arguments:
     --run
-    --no-run  Flag to run scaling experiment (default: ${default_run_flag})
+    --no-run    Flag to run scaling experiment (default: ${default_run_flag})
 
 Examples:
     $0 compute_miniweather.run --no-run
+
+Details:
+    The script does two things --
+
+    [1] Builds and compiles four different versions of miniweather. Each
+    version has a different grid resolution since we want to see how problem
+    size affects performance. The grid resolutions are (nx=128, nz=128),
+    (nx=128, nz=256), (nx=256, nz=128), and (nx=256, nz=256).
+
+    [2] Launchs Slurm jobs for each of these grid resolutions and for each 
+    of 1, 2, and 4 threads. This way you end up with experiments that look like
+    (nx=128, nz=128, nthreads=1); (nx=128, nz=128, nthreads=2); so on and so
+    forth.
 EOF
 )
 
@@ -100,7 +115,9 @@ do
     "${build_dir}/cmake_levante_config_and_build" ${params} &
 done 
 wait 
+echo 
 echo "[SUCCESS] All miniweather parameter sets compiled."
+echo 
 
 # run experiemnts with different number of threads
 nthreads=(1 2 4)
@@ -135,6 +152,7 @@ do
             # to where the directory that Slurm changes to
             OMP_NUM_THREADS=${nthread} sbatch --chdir "${nthread_experiments_dir}" "${run_script_path}" "${subdir}" "${miniweather_executable}" --run
             echo "[NOTE] Check ${nthread_experiments_dir} for simulation outputs"
+            echo
         fi
     done
 done

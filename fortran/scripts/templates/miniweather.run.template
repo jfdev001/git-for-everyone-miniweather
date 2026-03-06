@@ -166,6 +166,7 @@ if [[ "${run_flag}" == $default_run_flag ]]
 then
     echo "[WARNING] Not running batch job. Inspect output below to verify you understand the intended requested resources."
     echo srun -l --ntasks=${mpi_total_procs} --cpus-per-task=${OMP_NUM_THREADS} "${miniweather_executable_path}"
+    echo 
 else
     export OMPI_MCA_opal_common_ucx_opal_mem_hooks=1  # stops a comm library warning
     srun -l --ntasks=${mpi_total_procs} --cpus-per-task=${OMP_NUM_THREADS} "${miniweather_executable_path}"

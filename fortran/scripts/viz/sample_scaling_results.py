@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+"""Plot sample scaling results from OpenMP miniweather simulations.
+
+Requires that `scripts/scaling/launch_sample_scaling_experiments` has
+been executed with the `--run` flag.
+"""
 
 from collections import namedtuple
 from glob import glob
@@ -21,7 +26,8 @@ def main():
         join(BUILD_OUTPUT_DIR, dir) for dir in subdirs if "nx_" in dir]
 
     # extract parameters based on these subdirectories
-    # NOTE: you could adapt this based on your naming conventions
+    # NOTE: you could adapt this based on your naming conventions...
+    # e.g., what would you do if you were interested also in DATA_SPEC?
     SimParams = namedtuple(
         "SimParams", (
             "nx",
@@ -31,6 +37,7 @@ def main():
         )
     )
     sim_params_set: list[SimParams] = []
+    # NOTE: adapt this regex based on your subdir naming convention...
     subdir_name_regex = r"nx_(\d*)_nz_(\d*)_sim_time_(\d*)_out_freq_(\d*)"
     for subdir in experiment_subdirs:
         match_sim_params: list[tuple[str]] = findall(
@@ -40,7 +47,6 @@ def main():
             *tuple(map(lambda p: int(p), match_sim_params[0])))
         sim_params_set.append(sim_params)
 
-    # extract measurements from output directories and build object holding
     # experiment simulation parameters and measurements
     # NOTE: You could adapt this to your measurements
     Measurement = namedtuple(
@@ -57,10 +63,16 @@ def main():
         )
     )
 
+    # extract measurements from output directories and build object holding
+    # sim parameters and your results for those simulations
+
+    # e.g., a full path to an experiment might look something like this:
+    # experiment_subdirs = ["build/build_output/nx_128_nz_128_sim_time_100_out_freq_100/"]
     experiments: list[Experiment] = []
     experimental_output_dir_regex = r"output_nthread_(\d*)"
     for subdir, sim_params in zip(experiment_subdirs, sim_params_set):
 
+        # e.g., ["nx_128_nz_128_sim_time_100_out_freq_100/output_nthread_4"]
         experimental_output_dirs = [
             join(subdir, d) for d in listdir(subdir) if "output_" in d]
         results: list[Measurement] = []
@@ -74,11 +86,17 @@ def main():
             assert len(match_nthreads) == 1, "must find only one match"
             nthreads = int(match_nthreads[0])
 
+            # get the most recent log file from your experiment directory
             log_files = get_mtime_sorted_log_files(experimental_output_dir)
             most_recent_log_file = log_files[-1]
 
+            # compute the cgpu time from the log file
             cpu_time = get_cpu_time(most_recent_log_file)
 
+            # save that measurement in a manner that reflects the resources
+            # used for the experiment
+            # NOTE: you might change this if you also altered MPI procs or
+            # logical CPUs... e.g., Measurement(nthreads, nlogicalcpus, cpu_time)
             measurement = Measurement(nthreads, cpu_time)
             results.append(measurement)
 

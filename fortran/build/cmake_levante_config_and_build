@@ -5,35 +5,42 @@
 set -eu  # `man set` then search set \[ and look at options
 
 default_required="REQUIRED"
+default_data_spec="DATA_SPEC_THERMAL"
+valid_data_specs=("DATA_SPEC_THERMAL" "DATA_SPEC_COLLISION"\
+    "DATA_SPEC_MOUNTAIN" "DATA_SPEC_DENSITY_CURRENT" "DATA_SPEC_INJECTION")
 default_build_testing="OFF"
 default_delete_build_output_subdir_basename="OFF"
 usage=$(cat << EOF
 Usage: $0 NX NZ SIM_TIME OUT_FREQ BUILD_OUTPUT_SUBDIR 
-        [BUILD_TESTING] [DELETE_BUILD_OUTPUT]
+        [DATA_SPEC] [BUILD_TESTING] [DELETE_BUILD_OUTPUT]
 
 Configure and build miniweather via CMake.
 
 Required arguments:
-  NX                         Number of grid points in x-direction
-  NZ                         Number of grid points in z-direction
-  SIM_TIME                   Total simulation time
-  OUT_FREQ                   Output frequency
-  BUILD_OUTPUT_SUBDIR        Name of subdirectory created inside build_output/
+    NX                   Number of grid points in x-direction
+    NZ                   Number of grid points in z-direction
+    SIM_TIME             Total simulation time
+    OUT_FREQ             Output frequency
+    BUILD_OUTPUT_SUBDIR  Name of subdirectory created inside build_output/
 
 Optional arguments:
-  BUILD_TESTING              Enable CMake testing (default: ${default_build_testing})
-                             Valid values: ON | OFF
+    DATA_SPEC            Data specification that sets initial conditions (default=${default_data_spec}). 
+                         Options are one of the following: ${valid_data_specs[@]}
 
-  DELETE_BUILD_OUTPUT        Delete existing build_output/BUILD_OUTPUT_SUBDIR
-                             before configuring (default: ${default_delete_build_output_subdir_basename})
-                             Valid values: ON | OFF
+    BUILD_TESTING        Enable CMake testing (default: ${default_build_testing})
+                         Valid values: ON | OFF
+
+    DELETE_BUILD_OUTPUT  Delete existing build_output/BUILD_OUTPUT_SUBDIR
+                         before configuring (default: ${default_delete_build_output_subdir_basename})
+                         Valid values: ON | OFF
 
 Example:
-  $0 256 128 1000 10 run1 OFF OFF
+    build_output_subdir="run1"  # This is an arbitrary name for where build/compile artifacts are written
+    $0 256 128 1000 10 "\${build_output_subdir}" DATA_SPEC_THERMAL OFF OFF
 
 Notes:
-  - Required arguments must always be provided.
-  - Optional arguments default to the values shown above if omitted.
+    - Required arguments must always be provided.
+    - Optional arguments default to the values shown above if omitted.
 EOF
 )
 
@@ -43,8 +50,9 @@ nz="${2:-$default_required}"
 sim_time="${3:-$default_required}"
 out_freq="${4:-$default_required}"
 build_output_subdir_basename="${5:-$default_required}"
-build_testing="${6:-$default_build_testing}"
-delete_build_output_subdir_basename="${7:-$default_delete_build_output_subdir_basename}"
+data_spec="${6:-$default_data_spec}"
+build_testing="${7:-$default_build_testing}"
+delete_build_output_subdir_basename="${8:-$default_delete_build_output_subdir_basename}"
 
 if [[ "${nx}" == "-h" || "${nx}" == "--help" ]]
 then
@@ -118,6 +126,23 @@ then
     exit 1 
 fi
 
+is_invalid_data_spec=1
+for valid_data_spec in ${valid_data_specs[@]}
+do
+    if [[ "${data_spec}" == "${valid_data_spec}" ]]
+    then
+        is_invalid_data_spec=0
+        break
+    fi
+done
+
+if [[ ${is_invalid_data_spec} -eq 1 ]]
+then
+    echo "[ERROR] Invalid DATA_SPEC provided"
+    echo "  See $0 -h"
+    exit 1 
+fi
+
 # source code, configuration, and compile (build) output directory
 fortran_project_root="$(dirname $(dirname $(realpath ${BASH_SOURCE[0]})))"
 build_dir="${fortran_project_root}/build"
@@ -133,6 +158,8 @@ then
         rm -rf ${build_output_dir}
     fi
 fi
+
+
 
 # load dependencies 
 module purge

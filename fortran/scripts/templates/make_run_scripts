@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 set -eu
 default_account=bm1233
-valid_partitions=("shared" "compute")
+valid_partitions=("compute" "gpu")
 default_partition="compute"
 usage=$(cat << EOF
 Usage: $0 [-h] EMAIL [PARTITION] [ACCOUNT]

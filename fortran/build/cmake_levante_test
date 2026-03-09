@@ -22,7 +22,7 @@ build_output_dir="${build_dir}/build_output/${subdir}"
 
 # configure and build miniweather 
 config_and_build="${build_dir}/cmake_levante_config_and_build"
-bash "${config_and_build}" 200 100 1000 2000 "${subdir}" ON ON
+bash "${config_and_build}" 200 100 1000 2000 "${subdir}" DATA_SPEC_THERMAL ON ON
 
 # Without this, openmp test will hang
 module purge

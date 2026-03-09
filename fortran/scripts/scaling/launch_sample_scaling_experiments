@@ -17,7 +17,9 @@ Required arguments:
 
 Optional arguments:
     --run
-    --no-run    Flag to run scaling experiment (default: ${default_run_flag})
+    --no-run    Flag to run scaling experiment (default: ${default_run_flag}).
+                --no-run prints the command that would have been executed
+                by the Slurm scheduler. --run actually submits Slurm jobs
 
 Examples:
     $0 compute_miniweather.run --no-run
@@ -86,6 +88,11 @@ then
 fi
 
 # Generate simulation parameter sets
+# NOTE: You could change this to reflect the parameters you're interested in
+# e.g., different DATA_SPEC, different SIM_TIME... note if you change SIM_TIME
+# make sure to pay attention to the OUT_FREQ since at the moment the two
+# are equal to each other (meaning your netcdf file will only contain data
+# for the initial conditions and the final conditions)
 nxs=(128 256)
 nzs=(128 256)
 sim_time=100
@@ -97,6 +104,8 @@ do
     for nz in ${nzs[@]}
     do
         # generate unique subdirectory for this simulation set 
+        # NOTE: if you're interested in DATA_SPEC, you could append that 
+        # to the end of this subdir string
         subdir="nx_${nx}_nz_${nz}_sim_time_${sim_time}_out_freq_${out_freq}"
 
         # order of these arguments corresponds to 
@@ -120,6 +129,8 @@ echo "[SUCCESS] All miniweather parameter sets compiled."
 echo 
 
 # run experiemnts with different number of threads
+# NOTE: you could change these to reflect the number of threads or number
+# of logical cpus and/or mpi procs you wish to experiment with
 nthreads=(1 2 4)
 subdir_ix=4
 miniweather_executable="openmp"

@@ -1,3 +1,4 @@
+# TODO: What is the point of this file?
 FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -22,7 +23,6 @@ RUN apt-get update && \
         vim ca-certificates && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
-
 
 # aliases 
 RUN mkdir -p /usr/local/bin && \

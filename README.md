@@ -167,8 +167,7 @@ The first thing you should do is verify that you can compile and run
 `miniweather`:
 
 ```shell
-cd miniWeather/fortran/build
-source cmake_levante_test # or bash cmake_levante_test or ./cmake_levante_test
+# TODO: something here??
 ```
 
 This generates a directory called `build_output/test` where all configuration
@@ -696,6 +695,7 @@ The reason you have to go to all of this trouble is because of chaotic amplifica
  <p>
   
 ```python
+# TODO: This seems like an odd place for a script to be...
 import netCDF4
 import sys
 import numpy as np

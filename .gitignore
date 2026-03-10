@@ -31,4 +31,5 @@
 **/*.out
 **/*.err
 
+data/
 tmp/

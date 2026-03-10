@@ -1,3 +1,0 @@
-[submodule "cpp/YAKL"]
-	path = cpp/YAKL
-	url = git@github.com:mrnorman/YAKL.git

@@ -159,24 +159,22 @@ then
     fi
 fi
 
-
-
-# load dependencies 
-module purge
-module load \
-    gcc/11.2.0-gcc-11.2.0 \
-    openmpi/4.1.2-gcc-11.2.0 \
-    parallel-netcdf/1.12.2-openmpi-4.1.2-gcc-11.2.0 \
-    netcdf-c/main-openmpi-4.1.5-nvhpc-24.7
-
 # configure project 
-PARALLEL_NETCDF_L_LIBDIR="$(pkg-config --libs-only-L pnetcdf)"
-PARALLEL_NETCDF_LIBDIR="${PARALLEL_NETCDF_L_LIBDIR/-L/}"
+echo "[WARNING] Assumes pnetcdf installed in a system path like /usr/lib"
+PARALLEL_NETCDF_MOD_DIR="/usr/lib/x86_64-linux-gnu/fortran/gfortran-mod-15/"
+PARALLEL_NETCDF_LIB_DIR="/usr/lib" # this is redundant, set it to something else if needed
+if [[ ! -d "${PARALLEL_NETCDF_MOD_DIR}" ]]
+then
+    echo "[ERROR] Missing a directory containing pnetcdf.mod"
+    echo "[ERROR] By default, searching ${PARALLEL_NETCDF_MOD_DIR}"
+    echo "[ERROR] Update PARALLEL_NETCDF_MOD_DIR to a directory containing pnetcdf.mod"
+    exit 1 
+fi
 cmake \
     -S "${fortran_project_root}" -B "${build_output_dir}" \
     -DCMAKE_Fortran_COMPILER=mpif90 \
-    -DFFLAGS="-O3 -ffree-line-length-none -I$(pkg-config --variable=includedir pnetcdf)" \
-    -DLDFLAGS="$(pkg-config --libs pnetcdf) -Wl,-rpath,${PARALLEL_NETCDF_LIBDIR}" \
+    -DFFLAGS="-O3 -ffree-line-length-none -I${PARALLEL_NETCDF_MOD_DIR}"\
+    -DLDFLAGS="-L/${PARALLEL_NETCDF_LIB_DIR} -lpnetcdf" \
     -DOPENMP_FLAGS="-fopenmp" \
     -DOPENACC_FLAGS="-fopenacc" \
     -DBUILD_TESTING="${build_testing}" \

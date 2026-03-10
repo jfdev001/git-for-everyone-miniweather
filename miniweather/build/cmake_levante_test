@@ -25,12 +25,12 @@ config_and_build="${build_dir}/cmake_levante_config_and_build"
 bash "${config_and_build}" 200 100 1000 2000 "${subdir}" DATA_SPEC_THERMAL ON ON
 
 # Without this, openmp test will hang
-module purge
-module load \
-    gcc/11.2.0-gcc-11.2.0 \
-    openmpi/4.1.2-gcc-11.2.0 \
-    parallel-netcdf/1.12.2-openmpi-4.1.2-gcc-11.2.0 \
-    netcdf-c/main-openmpi-4.1.5-nvhpc-24.7
+# module purge
+# module load \
+#     gcc/11.2.0-gcc-11.2.0 \
+#     openmpi/4.1.2-gcc-11.2.0 \
+#     parallel-netcdf/1.12.2-openmpi-4.1.2-gcc-11.2.0 \
+#     netcdf-c/main-openmpi-4.1.5-nvhpc-24.7
 
 # perform tests 
 export TEST_MPI_COMMAND="mpirun -n 1"  # used by check_output.sh

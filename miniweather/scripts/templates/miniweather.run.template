@@ -169,5 +169,6 @@ then
     echo 
 else
     export OMPI_MCA_opal_common_ucx_opal_mem_hooks=1  # stops a comm library warning
-    srun -l --ntasks=${mpi_total_procs} --cpus-per-task=${OMP_NUM_THREADS} "${miniweather_executable_path}"
+    # srun -l --ntasks=${mpi_total_procs} --cpus-per-task=${OMP_NUM_THREADS} "${miniweather_executable_path}"
+    mpirun -n ${mpi_total_procs} "${miniweather_executable_path}"
 fi

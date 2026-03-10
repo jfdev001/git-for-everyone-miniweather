@@ -2,7 +2,7 @@
 
 showusage() {
   printf "Usage:\n"
-  printf "./check_output.sh  executable  mass_relative_tolerance  energy_relative_tolerance\n\n"
+  printf "./check_output  executable  mass_relative_tolerance  energy_relative_tolerance\n\n"
 }
 if [[ "$1" == "-h" || "$1" == "--help" ]]; then
   showusage

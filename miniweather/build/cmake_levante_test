@@ -33,7 +33,7 @@ bash "${config_and_build}" 200 100 1000 2000 "${subdir}" DATA_SPEC_THERMAL ON ON
 #     netcdf-c/main-openmpi-4.1.5-nvhpc-24.7
 
 # perform tests 
-export TEST_MPI_COMMAND="mpirun -n 1"  # used by check_output.sh
-cp "${build_dir}/check_output.sh" "${build_output_dir}"
+export TEST_MPI_COMMAND="mpirun -n 1"  # used by check_output
+cp "${build_dir}/check_output" "${build_output_dir}"
 cd "${build_output_dir}"
 ctest 

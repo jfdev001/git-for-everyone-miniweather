@@ -67,7 +67,7 @@ if (NOT ("${SERIAL_LINK_FLAGS}" STREQUAL "") )
 endif()
 
 if(${BUILD_TESTING})
-    add_test(NAME SERIAL_TEST COMMAND ./check_output.sh ./serial_test ${tol} 4.5e-5 ) 
+    add_test(NAME SERIAL_TEST COMMAND ./check_output ./serial_test ${tol} 4.5e-5 ) 
 endif()
 
 
@@ -97,7 +97,7 @@ if (NOT ("${MPI_LINK_FLAGS}" STREQUAL "") )
 endif()
 
 if(${BUILD_TESTING})
-  add_test(NAME MPI_TEST COMMAND ./check_output.sh ./mpi_test ${tol} 4.5e-5 ) 
+  add_test(NAME MPI_TEST COMMAND ./check_output ./mpi_test ${tol} 4.5e-5 ) 
 endif()
 
 
@@ -130,7 +130,7 @@ if (NOT ("${OPENMP_FLAGS}" STREQUAL "") )
 
   if(${BUILD_TESTING})
     target_link_libraries(openmp_test "${OPENMP_LINK_FLAGS}")
-    add_test(NAME OPENMP_TEST COMMAND ./check_output.sh ./openmp_test ${tol} 4.5e-5 ) 
+    add_test(NAME OPENMP_TEST COMMAND ./check_output ./openmp_test ${tol} 4.5e-5 ) 
   endif()
 
 endif()
@@ -156,5 +156,5 @@ if (NOT ("${OPENACC_FLAGS}" STREQUAL "") )
   target_link_libraries(openacc      "${OPENACC_LINK_FLAGS}")
   target_link_libraries(openacc_test "${OPENACC_LINK_FLAGS}")
 
-  add_test(NAME OPENACC_TEST COMMAND ./check_output.sh ./openacc_test ${tol} 4.5e-5 ) 
+  add_test(NAME OPENACC_TEST COMMAND ./check_output ./openacc_test ${tol} 4.5e-5 ) 
 endif()

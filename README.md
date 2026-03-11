@@ -164,7 +164,16 @@ git fetch upstream  # allows you to pull code from jfdev001 in the future
 ## Building and Testing Workflow
 
 The first thing you should do is verify that you can compile and run
-`miniweather`:
+`miniweather`. Note, you don't actually need to do that for the Git workshop;
+however, if you would like to, you can use the provided Docker image (assuming
+Docker is installed on your system):
+
+```shell
+sudo docker pull jfdev001/miniweather:local
+docker run -v $(realpath ./):/workspace/miniweather -it jfdev001/miniweather:local
+```
+
+Then, make sure that you are in the `build/` directory and do:
 
 ```shell
 # TODO: something here??

@@ -1,7 +1,7 @@
 # The MiniWeather Mini App
 
 A lightweight Fortran application for simulating weather-like flows, developed
-by ORNL and NVIDIA. It supports multiple parallelization strategies:
+by ORNL and NVIDIA. Used in "Git for Everyone" workshop (see the accompanying [slides](https://jfdev001.github.io/talks/git-for-everyone/index.html)). It supports multiple parallelization strategies:
 
 * MPI
 * OpenACC Offload 

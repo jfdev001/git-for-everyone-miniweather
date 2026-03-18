@@ -1,3 +1,6 @@
+
+## something commented by KS
+
 # The MiniWeather Mini App
 
 A lightweight Fortran application for simulating weather-like flows, developed
